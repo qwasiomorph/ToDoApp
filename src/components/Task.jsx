@@ -10,6 +10,7 @@ const Task = ({ info, toggleCompleted, removeTask, editTask, index }) => {
         <input
           className="toggle"
           type="checkbox"
+          checked={!info.active}
           onClick={() => {
             toggleCompleted(index);
           }}
