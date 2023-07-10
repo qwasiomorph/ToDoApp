@@ -1,104 +1,75 @@
-import React, { useState } from 'react';
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-const Task = ({ info, toggleCompleted, removeTask, editTask, index }) => {
-  const [editValue, setEditValue] = useState(info.desc);
+export default class Task extends Component {
+  state = {
+    editValue: this.props.info.desc,
+  };
+  handleEditChange = (e) => {
+    this.setState({ editValue: e.target.value });
+  };
+  handleComplete = () => {
+    this.props.toggleCompleted(this.props.info.id);
+  };
+  handleDelete = () => {
+    this.props.removeTask(this.props.info.id);
+  };
+  handleEditClick = () => {
+    this.props.setEditedTask(this.props.info.id);
+  };
+  handleEditKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.props.editTask(this.props.info.id, this.state.editValue);
+      this.props.setEditedTask('');
+    }
+  };
 
-  return (
-    <li className={!info.active ? 'completed' : info.editing ? 'editing' : ''}>
-      <div className="view">
-        <input
-          className="toggle"
-          type="checkbox"
-          checked={!info.active}
-          onChange={() => {
-            toggleCompleted(index);
-          }}
-        />
-        <label>
-          <span className="description">{info.desc}</span>
-          <span className="created">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
-        </label>
-        <button
-          className="icon icon-edit"
-          onClick={(e) => {
-            e.preventDefault();
-            editTask(index);
-          }}
-        ></button>
-        <button
-          className="icon icon-destroy"
-          onClick={(e) => {
-            e.preventDefault();
-            removeTask(index);
-          }}
-        ></button>
-      </div>
-      {info.editing ? (
-        <input
-          type="text"
-          className="edit"
-          value={editValue}
-          onChange={(e) => {
-            setEditValue(e.target.value);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter') {
-              editTask(index, editValue);
-            }
-          }}
-        />
-      ) : (
-        <></>
-      )}
-    </li>
-  );
-};
+  render() {
+    const { info, currEditedId } = this.props;
+    const editing = currEditedId === info.id;
+    const taskClassName = !info.active ? 'completed' : editing ? 'editing' : '';
+    return (
+      <li className={taskClassName}>
+        <div className="view">
+          <input className="toggle" type="checkbox" checked={!info.active} onChange={this.handleComplete} />
+          <label>
+            <span className="description">{info.desc}</span>
+            <span className="created">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
+          </label>
+          <button className="icon icon-edit" onClick={this.handleEditClick}></button>
+          <button className="icon icon-destroy" onClick={this.handleDelete}></button>
+        </div>
+        {editing ? (
+          <input
+            type="text"
+            className="edit"
+            value={this.state.editValue}
+            onChange={this.handleEditChange}
+            onKeyDown={this.handleEditKeyDown}
+          />
+        ) : (
+          <></>
+        )}
+      </li>
+    );
+  }
 
-Task.defaultProps = {
-  info: {},
-  toggleCompleted: () => {},
-  removeTask: () => {},
-  editTask: () => {},
-  index: 0,
-};
+  static defaultProps = {
+    info: {},
+    toggleCompleted: () => {},
+    removeTask: () => {},
+    editTask: () => {},
+    currEditedId: '',
+    setEditedTask: () => {},
+  };
 
-Task.propTypes = {
-  info: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === 'object') {
-      return null;
-    }
-    return new Error(`${componentName}: ${propName} must be an Object`);
-  },
-  toggleCompleted: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === 'function') {
-      return null;
-    }
-    return new Error(`${componentName}: ${propName} must be a Function`);
-  },
-  removeTask: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === 'function') {
-      return null;
-    }
-    return new Error(`${componentName}: ${propName} must be a Function`);
-  },
-  editTask: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === 'function') {
-      return null;
-    }
-    return new Error(`${componentName}: ${propName} must be a Function`);
-  },
-  index: (props, propName, componentName) => {
-    const value = props[propName];
-    if (typeof value === 'number' && !Number.isNaN(value)) {
-      return null;
-    }
-    return new Error(`${componentName}: ${propName} must be a Number`);
-  },
-};
-
-export default Task;
+  static propTypes = {
+    info: PropTypes.object,
+    toggleCompleted: PropTypes.func,
+    removeTask: PropTypes.func,
+    editTask: PropTypes.func,
+    currEditedId: PropTypes.string,
+    setEditedTask: PropTypes.func,
+  };
+}

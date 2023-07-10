@@ -1,27 +1,32 @@
-import React, { useState } from 'react';
+import React, { Component } from 'react';
 
-const NewTaskForm = ({ addTask }) => {
-  const [inputValue, setInputValue] = useState('');
-  return (
-    <header>
-      <h1>todos</h1>
-      <input
-        className="new-todo"
-        placeholder="What needs to be done?"
-        autoFocus
-        value={inputValue}
-        onChange={(e) => {
-          setInputValue(e.target.value);
-        }}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            addTask(inputValue);
-            setInputValue('');
-          }
-        }}
-      ></input>
-    </header>
-  );
-};
+export default class NewTaskForm extends Component {
+  state = {
+    inputValue: '',
+  };
+  setInputValue = (e) => {
+    this.setState({ inputValue: e.target.value });
+  };
+  handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.props.addTask(this.state.inputValue);
+      this.setState({ inputValue: '' });
+    }
+  };
 
-export default NewTaskForm;
+  render() {
+    return (
+      <>
+        <h1>todos</h1>
+        <input
+          className="new-todo"
+          placeholder="What needs to be done?"
+          autoFocus
+          value={this.state.inputValue}
+          onChange={this.setInputValue}
+          onKeyDown={this.handleKeyDown}
+        ></input>
+      </>
+    );
+  }
+}

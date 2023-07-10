@@ -1,47 +1,35 @@
-const Footer = ({ filter, setFilter, length }) => {
-  return (
-    <footer className="footer">
-      <span className="todo-count">
-        {length === 0 ? 'No' : length} item{length !== 1 ? 's' : ''} {length === 0 ? '' : 'left'}
-      </span>
-      <ul className="filters">
-        <li>
-          <button
-            className={filter === 'All' ? 'selected' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              setFilter('All');
-            }}
-          >
-            All
-          </button>
-        </li>
-        <li>
-          <button
-            className={filter === 'Active' ? 'selected' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              setFilter('Active');
-            }}
-          >
-            Active
-          </button>
-        </li>
-        <li>
-          <button
-            className={filter === 'Completed' ? 'selected' : ''}
-            onClick={(e) => {
-              e.preventDefault();
-              setFilter('Completed');
-            }}
-          >
-            Completed
-          </button>
-        </li>
-      </ul>
-      <button className="clear-completed">Clear completed</button>
-    </footer>
-  );
-};
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
-export default Footer;
+import TasksFilter from './TasksFilter';
+
+export default class Footer extends Component {
+  render() {
+    const { filter, setFilter, length, clearCompleted } = this.props;
+    return (
+      <footer className="footer">
+        <span className="todo-count">
+          {length === 0 ? 'No' : length} item{length !== 1 ? 's' : ''} {length === 0 ? '' : 'left'}
+        </span>
+        <TasksFilter filter={filter} setFilter={setFilter} />
+        <button className="clear-completed" onClick={clearCompleted}>
+          Clear completed
+        </button>
+      </footer>
+    );
+  }
+
+  static defaultProps = {
+    filter: 'All',
+    setFilter: () => {},
+    length: 0,
+    clearCompleted: () => {},
+  };
+
+  static propTypes = {
+    filter: PropTypes.string,
+    setFilter: PropTypes.func,
+    length: PropTypes.number,
+    clearCompleted: PropTypes.func,
+  };
+}

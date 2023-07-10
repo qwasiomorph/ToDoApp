@@ -1,32 +1,35 @@
+import { Component } from 'react';
+
 import Task from './Task';
 
-const TaskList = ({ tasks, toggleCompleted, removeTask, editTask, filter }) => {
-  return (
-    <ul className="todo-list">
-      {tasks
-        .filter((task) => {
-          if (filter === 'All') {
-            return true;
-          }
-          if (filter === 'Completed') {
-            return !task.active;
-          }
-          if (filter === 'Active') {
-            return task.active;
-          }
-        })
-        .map((task, index) => (
+export default class TaskList extends Component {
+  render() {
+    const { tasks, toggleCompleted, removeTask, editTask, filter, currEditedId, setEditedTask } = this.props;
+    const filteredTasks = tasks.filter((task) => {
+      if (filter === 'All') {
+        return true;
+      }
+      if (filter === 'Completed') {
+        return !task.active;
+      }
+      if (filter === 'Active') {
+        return task.active;
+      }
+    });
+    return (
+      <ul className="todo-list">
+        {filteredTasks.map((task) => (
           <Task
-            key={task.date + index}
+            key={task.id}
             info={task}
             toggleCompleted={toggleCompleted}
             removeTask={removeTask}
             editTask={editTask}
-            index={index}
+            currEditedId={currEditedId}
+            setEditedTask={setEditedTask}
           />
         ))}
-    </ul>
-  );
-};
-
-export default TaskList;
+      </ul>
+    );
+  }
+}
