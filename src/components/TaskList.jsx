@@ -17,7 +17,7 @@ const TaskList = ({ tasks, toggleCompleted, removeTask, editTask, filter }) => {
         })
         .map((task, index) => (
           <Task
-            key={task.date}
+            key={task.date + index}
             info={task}
             toggleCompleted={toggleCompleted}
             removeTask={removeTask}

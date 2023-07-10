@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './App.css';
 import NewTaskForm from './components/NewTaskForm';
@@ -17,21 +17,11 @@ function App() {
       active: true,
     };
     setTasks([...tasks, task]);
-    let amount = activeTasksAmount + 1;
-    setActiveTasksAmount(amount);
   };
 
   const toggleCompleted = (index) => {
     let task = tasks[index];
     task.active = !task.active;
-    let amount;
-    if (task.active) {
-      amount = activeTasksAmount + 1;
-      setActiveTasksAmount(amount);
-    } else {
-      amount = activeTasksAmount - 1;
-      setActiveTasksAmount(amount);
-    }
     let listCopy = [...tasks];
     listCopy.splice(index, 1, task);
     setTasks(listCopy);
@@ -41,9 +31,13 @@ function App() {
     let listCopy = [...tasks];
     listCopy.splice(index, 1);
     setTasks(listCopy);
-    let amount = activeTasksAmount - 1;
-    setActiveTasksAmount(amount);
   };
+
+  useEffect(() => {
+    console.log('Effect');
+    let activeTasks = tasks.filter((task) => task.active).reduce((accelerator) => accelerator + 1, 0);
+    setActiveTasksAmount(activeTasks);
+  }, [tasks]);
 
   const editTask = (index, value) => {
     if (!value) {

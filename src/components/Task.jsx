@@ -11,7 +11,7 @@ const Task = ({ info, toggleCompleted, removeTask, editTask, index }) => {
           className="toggle"
           type="checkbox"
           checked={!info.active}
-          onClick={() => {
+          onChange={() => {
             toggleCompleted(index);
           }}
         />
