@@ -13,7 +13,7 @@ export default class App extends Component {
   };
 
   addTask = (value) => {
-    if (value) {
+    if (value.trim()) {
       let newTask = {
         id: uuidv4(),
         desc: value,
@@ -47,7 +47,7 @@ export default class App extends Component {
   };
 
   editTask = (idForEdit, value) => {
-    if (value) {
+    if (value.trim()) {
       this.setState({
         tasks: this.state.tasks.map((task) => {
           if (task.id === idForEdit) {
