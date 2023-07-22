@@ -12,13 +12,14 @@ export default class App extends Component {
     currEditedId: '',
   };
 
-  addTask = (value) => {
+  addTask = (value, timeValue) => {
     if (value.trim()) {
       let newTask = {
         id: uuidv4(),
         desc: value,
         date: new Date(),
         active: true,
+        timeout: timeValue,
       };
       this.setState({
         tasks: [...this.state.tasks, newTask],

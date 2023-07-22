@@ -1,13 +1,17 @@
 import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import addZero from '../utils/addZero';
 
 export default class Task extends Component {
   state = {
     editValue: this.props.info.desc,
+    timerValue: 0,
+    timerId: null,
   };
   handleEditChange = (e) => {
-    this.setState({ editValue: e.target.value });
+    this.stopTimout(this.state.timerId);
+    this.setState({ editValue: e.target.value, timerValue: 0 });
   };
   handleComplete = () => {
     this.props.toggleCompleted(this.props.info.id);
@@ -25,6 +29,59 @@ export default class Task extends Component {
     }
   };
 
+  startTimeout = (sTime = '00:01', timerValue) => {
+    let seconds;
+    if (!this.state.timerValue) {
+      let [hours, minutes] = sTime.split(':');
+      seconds = hours * 60 * 60 + minutes * 60;
+      this.setState({ timerValue: seconds });
+    } else {
+      seconds = this.state.timerValue;
+    }
+    return setInterval(() => {
+      if (this.state.timerValue === 0) {
+        this.stopTimout(this.state.timerId);
+        return;
+      }
+      this.setState(() => {
+        return { timerValue: this.state.timerValue - 1 };
+      });
+    }, 1000);
+  };
+
+  stopTimout = (timeout) => {
+    clearInterval(timeout);
+  };
+
+  handleTimerStart = () => {
+    this.setState({ timerId: this.startTimeout(this.props.info.timeout) });
+  };
+  handleTimerStop = () => {
+    this.stopTimout(this.state.timerId);
+    this.setState({ timerId: null });
+  };
+
+  parseTimer = () => {
+    let seconds = this.state.timerValue;
+    let hours = Math.floor(seconds / 3600);
+    seconds -= hours * 3600;
+    let minutes = Math.floor(seconds / 60);
+    seconds -= minutes * 60;
+    let result = ``;
+    if (hours) {
+      result += `${addZero(hours)}:`;
+    }
+    if (minutes) {
+      result += `${addZero(minutes)}:`;
+    }
+    result += `${addZero(seconds)}`;
+    return result;
+  };
+
+  componentWillUnmount() {
+    this.stopTimout(this.state.timerId);
+  }
+
   render() {
     const { info, currEditedId } = this.props;
     const editing = currEditedId === info.id;
@@ -34,8 +91,13 @@ export default class Task extends Component {
         <div className="view">
           <input className="toggle" type="checkbox" checked={!info.active} onChange={this.handleComplete} />
           <label>
-            <span className="description">{info.desc}</span>
-            <span className="created">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
+            <span className="title">{info.desc}</span>
+            <span className="description">
+              <button onClick={this.handleTimerStart} className="icon icon-play"></button>
+              <button onClick={this.handleTimerStop} className="icon icon-pause"></button>
+              <span className="timer">{this.state.timerValue ? this.parseTimer() : info.timeout}</span>
+            </span>
+            <span className="description">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
           </label>
           <button className="icon icon-edit" onClick={this.handleEditClick}></button>
           <button className="icon icon-destroy" onClick={this.handleDelete}></button>
