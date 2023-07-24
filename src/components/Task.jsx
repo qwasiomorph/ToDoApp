@@ -2,18 +2,19 @@ import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import addZero from '../utils/addZero';
+import { timeStringToInt } from '../utils/parseTimeInput';
 
 export default class Task extends Component {
   state = {
     editValue: this.props.info.desc,
-    timerValue: 0,
+    timerValue: timeStringToInt(this.props.info.timeout),
     timerId: null,
   };
   handleEditChange = (e) => {
-    this.stopTimout(this.state.timerId);
-    this.setState({ editValue: e.target.value, timerValue: 0 });
+    this.setState({ editValue: e.target.value });
   };
   handleComplete = () => {
+    this.stopAndReset(this.state.timerId);
     this.props.toggleCompleted(this.props.info.id);
   };
   handleDelete = () => {
@@ -29,24 +30,23 @@ export default class Task extends Component {
     }
   };
 
-  startTimeout = (sTime = '00:01', timerValue) => {
-    let seconds;
-    if (!this.state.timerValue) {
-      let [hours, minutes] = sTime.split(':');
-      seconds = hours * 60 * 60 + minutes * 60;
-      this.setState({ timerValue: seconds });
-    } else {
-      seconds = this.state.timerValue;
-    }
+  startTimeout = () => {
+    const timerAscending = this.props.info.timeout === '00:00';
+    let increment = timerAscending ? 1 : -1;
     return setInterval(() => {
-      if (this.state.timerValue === 0) {
-        this.stopTimout(this.state.timerId);
+      if (this.state.timerValue === 0 && !timerAscending) {
+        this.stopAndReset(this.state.timerId);
         return;
       }
       this.setState(() => {
-        return { timerValue: this.state.timerValue - 1 };
+        return { timerValue: this.state.timerValue + increment };
       });
     }, 1000);
+  };
+
+  stopAndReset = (timeout) => {
+    clearInterval(timeout);
+    this.setState({ timerValue: timeStringToInt(this.props.info.timeout) });
   };
 
   stopTimout = (timeout) => {
@@ -71,9 +71,7 @@ export default class Task extends Component {
     if (hours) {
       result += `${addZero(hours)}:`;
     }
-    if (minutes) {
-      result += `${addZero(minutes)}:`;
-    }
+    result += `${addZero(minutes)}:`;
     result += `${addZero(seconds)}`;
     return result;
   };
@@ -93,8 +91,16 @@ export default class Task extends Component {
           <label>
             <span className="title">{info.desc}</span>
             <span className="description">
-              <button onClick={this.handleTimerStart} className="icon icon-play"></button>
-              <button onClick={this.handleTimerStop} className="icon icon-pause"></button>
+              <button
+                onClick={this.handleTimerStart}
+                disabled={!info.active ? true : false}
+                className="icon icon-play"
+              ></button>
+              <button
+                onClick={this.handleTimerStop}
+                disabled={!info.active ? true : false}
+                className="icon icon-pause"
+              ></button>
               <span className="timer">{this.state.timerValue ? this.parseTimer() : info.timeout}</span>
             </span>
             <span className="description">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
