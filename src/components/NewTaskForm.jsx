@@ -34,7 +34,7 @@ export default class NewTaskForm extends Component {
         <h1>todos</h1>
         <div className="gh-link">
           <a href="https://github.com/qwasiomorph/ToDoApp/tree/toDOTimer" target="_blank" rel="noopener noreferrer">
-            <img src="src/assets/github-mark.svg" alt="gh-logo" width={30} height={30} />
+            <img src="../assets/github-mark.svg" alt="gh-logo" width={30} height={30} />
           </a>
         </div>
         <input
