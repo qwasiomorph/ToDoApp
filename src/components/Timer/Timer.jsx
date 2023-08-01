@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import addZero from '../utils/addZero';
-import { timeStringToInt } from '../utils/parseTimeInput';
+import addZero from '../../utils/addZero';
+import { timeStringToInt } from '../../utils/parseTimeInput';
 
 const Timer = ({ timerValue, isAscending }) => {
   const [isPaused, togglePause] = useState(true);

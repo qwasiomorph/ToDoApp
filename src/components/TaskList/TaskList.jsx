@@ -1,4 +1,4 @@
-import Task from './Task';
+import Task from '../Task';
 
 const TaskList = ({ tasks, toggleCompleted, removeTask, editTask, filter, currEditedId, setEditedTask }) => {
   const filteredTasks = tasks.filter((task) => {

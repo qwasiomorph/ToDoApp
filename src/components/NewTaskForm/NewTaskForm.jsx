@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { parseTime } from '../utils/parseTimeInput';
+import { parseTime } from '../../utils/parseTimeInput';
 
 const NewTaskForm = ({ addTask }) => {
   const [inputValue, putValue] = useState('');
