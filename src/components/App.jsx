@@ -1,18 +1,16 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import NewTaskForm from './NewTaskForm';
 import TaskList from './TaskList';
 import Footer from './Footer';
 
-export default class App extends Component {
-  state = {
-    tasks: [],
-    filter: 'All',
-    currEditedId: '',
-  };
+const App = () => {
+  const [tasks, setTasks] = useState([]);
+  const [filter, setFilter] = useState('All');
+  const [currEditedId, setCurrEditedId] = useState('');
 
-  addTask = (value, timeValue) => {
+  const addTask = (value, timeValue) => {
     if (value.trim()) {
       let newTask = {
         id: uuidv4(),
@@ -21,15 +19,13 @@ export default class App extends Component {
         active: true,
         timeout: timeValue,
       };
-      this.setState({
-        tasks: [...this.state.tasks, newTask],
-      });
+      setTasks([...tasks, newTask]);
     }
   };
 
-  toggleCompleted = (id) => {
-    this.setState({
-      tasks: this.state.tasks.map((task) => {
+  const toggleCompleted = (id) => {
+    setTasks(
+      tasks.map((task) => {
         if (task.id === id) {
           let newTask = task;
           newTask.active = !newTask.active;
@@ -37,20 +33,18 @@ export default class App extends Component {
         } else {
           return task;
         }
-      }),
-    });
+      })
+    );
   };
 
-  removeTask = (idForRemove) => {
-    this.setState({
-      tasks: this.state.tasks.filter(({ id }) => !(id === idForRemove)),
-    });
+  const removeTask = (idForRemove) => {
+    setTasks(tasks.filter(({ id }) => !(id === idForRemove)));
   };
 
-  editTask = (idForEdit, value) => {
+  const editTask = (idForEdit, value) => {
     if (value.trim()) {
-      this.setState({
-        tasks: this.state.tasks.map((task) => {
+      setTasks(
+        tasks.map((task) => {
           if (task.id === idForEdit) {
             let newTask = task;
             newTask.desc = value;
@@ -58,50 +52,35 @@ export default class App extends Component {
           } else {
             return task;
           }
-        }),
-      });
+        })
+      );
     }
   };
 
-  setEditedTask = (id) => {
-    this.setState({ currEditedId: id });
+  const clearCompleted = () => {
+    setTasks(tasks.filter(({ active }) => active));
   };
 
-  setFilter = (newFilter) => {
-    this.setState({ filter: newFilter });
-  };
-
-  clearCompleted = () => {
-    this.setState({
-      tasks: this.state.tasks.filter(({ active }) => active),
-    });
-  };
-
-  render() {
-    const aciveTasksAmount = this.state.tasks.filter(({ active }) => active).reduce((prev) => prev + 1, 0);
-    return (
-      <section className="todoapp">
-        <header>
-          <NewTaskForm addTask={this.addTask} />
-        </header>
-        <section className="main">
-          <TaskList
-            tasks={this.state.tasks}
-            toggleCompleted={this.toggleCompleted}
-            removeTask={this.removeTask}
-            editTask={this.editTask}
-            filter={this.state.filter}
-            currEditedId={this.state.currEditedId}
-            setEditedTask={this.setEditedTask}
-          />
-          <Footer
-            filter={this.state.filter}
-            setFilter={this.setFilter}
-            length={aciveTasksAmount}
-            clearCompleted={this.clearCompleted}
-          />
-        </section>
+  const aciveTasksAmount = tasks.filter(({ active }) => active).reduce((prev) => prev + 1, 0);
+  return (
+    <section className="todoapp">
+      <header>
+        <NewTaskForm addTask={addTask} />
+      </header>
+      <section className="main">
+        <TaskList
+          tasks={tasks}
+          toggleCompleted={toggleCompleted}
+          removeTask={removeTask}
+          editTask={editTask}
+          filter={filter}
+          currEditedId={currEditedId}
+          setEditedTask={setCurrEditedId}
+        />
+        <Footer filter={filter} setFilter={setFilter} length={aciveTasksAmount} clearCompleted={clearCompleted} />
       </section>
-    );
-  }
-}
+    </section>
+  );
+};
+
+export default App;

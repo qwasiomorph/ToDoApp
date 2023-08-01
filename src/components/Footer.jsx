@@ -3,33 +3,32 @@ import PropTypes from 'prop-types';
 
 import TasksFilter from './TasksFilter';
 
-export default class Footer extends Component {
-  render() {
-    const { filter, setFilter, length, clearCompleted } = this.props;
-    return (
-      <footer className="footer">
-        <span className="todo-count">
-          {length === 0 ? 'No' : length} item{length !== 1 ? 's' : ''} {length === 0 ? '' : 'left'}
-        </span>
-        <TasksFilter filter={filter} setFilter={setFilter} />
-        <button className="clear-completed" onClick={clearCompleted}>
-          Clear completed
-        </button>
-      </footer>
-    );
-  }
+const Footer = ({ filter, setFilter, length, clearCompleted }) => {
+  return (
+    <footer className="footer">
+      <span className="todo-count">
+        {length === 0 ? 'No' : length} item{length !== 1 ? 's' : ''} {length === 0 ? '' : 'left'}
+      </span>
+      <TasksFilter filter={filter} setFilter={setFilter} />
+      <button className="clear-completed" onClick={clearCompleted}>
+        Clear completed
+      </button>
+    </footer>
+  );
+};
 
-  static defaultProps = {
-    filter: 'All',
-    setFilter: () => {},
-    length: 0,
-    clearCompleted: () => {},
-  };
+Footer.defaultProps = {
+  filter: 'All',
+  setFilter: () => {},
+  length: 0,
+  clearCompleted: () => {},
+};
 
-  static propTypes = {
-    filter: PropTypes.string,
-    setFilter: PropTypes.func,
-    length: PropTypes.number,
-    clearCompleted: PropTypes.func,
-  };
-}
+Footer.propTypes = {
+  filter: PropTypes.string,
+  setFilter: PropTypes.func,
+  length: PropTypes.number,
+  clearCompleted: PropTypes.func,
+};
+
+export default Footer;

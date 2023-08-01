@@ -1,24 +1,21 @@
-import { Component } from 'react';
+const TasksFilter = ({ filter, setFilter }) => {
+  return (
+    <ul className="filters">
+      {['All', 'Active', 'Completed'].map((filt) => (
+        <li key={filt}>
+          <button
+            className={filter === filt ? 'selected' : ''}
+            onClick={(e) => {
+              e.preventDefault();
+              setFilter(filt);
+            }}
+          >
+            {filt}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
-export default class TasksFilter extends Component {
-  render() {
-    const { filter, setFilter } = this.props;
-    return (
-      <ul className="filters">
-        {['All', 'Active', 'Completed'].map((filt) => (
-          <li key={filt}>
-            <button
-              className={filter === filt ? 'selected' : ''}
-              onClick={(e) => {
-                e.preventDefault();
-                setFilter(filt);
-              }}
-            >
-              {filt}
-            </button>
-          </li>
-        ))}
-      </ul>
-    );
-  }
-}
+export default TasksFilter;
