@@ -1,6 +1,7 @@
-import formatDistanceToNow from 'date-fns/formatDistanceToNow';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import formatDistanceToNow from 'date-fns/formatDistanceToNow';
+
 import Timer from './Timer';
 
 const Task = ({ info, toggleCompleted, removeTask, editTask, currEditedId, setEditedTask }) => {

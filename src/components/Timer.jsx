@@ -27,7 +27,7 @@ const Timer = ({ timerValue, isAscending }) => {
     seconds -= hours * 3600;
     let minutes = Math.floor(seconds / 60);
     seconds -= minutes * 60;
-    let result = ``;
+    let result = '';
     if (hours) {
       result += `${addZero(hours)}:`;
     }
