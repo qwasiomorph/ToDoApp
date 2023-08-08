@@ -45,7 +45,7 @@ const NewTaskForm = ({ addTask }) => {
         autoFocus
         value={inputValue}
         onChange={setInputValue}
-      ></input>
+      />
       <input
         className="new-todo-form__timer"
         placeholder="Min"
@@ -64,7 +64,7 @@ const NewTaskForm = ({ addTask }) => {
         value={seconds}
         onChange={handleTime}
       />
-      <input className="hidden" type="submit"></input>
+      <input className="hidden" type="submit" />
     </form>
   );
 };

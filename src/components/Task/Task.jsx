@@ -32,14 +32,14 @@ const Task = ({ info, toggleCompleted, removeTask, editTask, currEditedId, setEd
   return (
     <li className={taskClassName}>
       <div className="view">
-        <input className="toggle" type="checkbox" checked={!info.active} onChange={handleComplete} />
-        <label>
+        <input id={info.id} className="toggle" type="checkbox" checked={!info.active} onChange={handleComplete} />
+        <label htmlFor={info.id}>
           <span className="title">{info.desc}</span>
           {info.active && <Timer timerValue={info.timeout} isAscending={isAscending} />}
           <span className="description">{formatDistanceToNow(info.date, { addSuffix: true })}</span>
         </label>
-        <button className="icon icon-edit" onClick={handleEditClick}></button>
-        <button className="icon icon-destroy" onClick={handleDelete}></button>
+        <button type="button" className="icon icon-edit" onClick={handleEditClick}></button>
+        <button type="button" className="icon icon-destroy" onClick={handleDelete}></button>
       </div>
       {editing ? (
         <input
@@ -48,6 +48,7 @@ const Task = ({ info, toggleCompleted, removeTask, editTask, currEditedId, setEd
           value={editValue}
           onChange={handleEditChange}
           onKeyDown={handleEditKeyDown}
+          autoFocus
         />
       ) : (
         <></>

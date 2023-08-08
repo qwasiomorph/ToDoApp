@@ -4,6 +4,7 @@ const TasksFilter = ({ filter, setFilter }) => {
       {['All', 'Active', 'Completed'].map((filt) => (
         <li key={filt}>
           <button
+            type="button"
             className={filter === filt ? 'selected' : ''}
             onClick={(e) => {
               e.preventDefault();

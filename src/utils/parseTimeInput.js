@@ -1,7 +1,7 @@
 export function parseTime(input) {
-  let time = input.replace(/D/g, '');
+  let time = input.replace(/\D/g, '');
   if (!time) {
-    time == '00';
+    time = '00';
   }
   if (time.length === 1) {
     time = `0${time}`;

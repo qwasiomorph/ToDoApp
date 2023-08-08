@@ -10,7 +10,7 @@ const Footer = ({ filter, setFilter, length, clearCompleted }) => {
         {length === 0 ? 'No' : length} item{length !== 1 ? 's' : ''} {length === 0 ? '' : 'left'}
       </span>
       <TasksFilter filter={filter} setFilter={setFilter} />
-      <button className="clear-completed" onClick={clearCompleted}>
+      <button type="button" className="clear-completed" onClick={clearCompleted}>
         Clear completed
       </button>
     </footer>
