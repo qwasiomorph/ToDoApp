@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { parseTime } from '../../utils/parseTimeInput';
+import addZero from '../../utils/addZero';
 
 const NewTaskForm = ({ addTask }) => {
   const [inputValue, putValue] = useState('');
@@ -22,12 +23,16 @@ const NewTaskForm = ({ addTask }) => {
   const handleTime = (e) => {
     let time = parseTime(e.target.value);
     if (e.target.name === 'min') {
-      setMinutes(e.target.value);
-      time = time + timerValue.slice(2);
+      setMinutes(time);
+
+      time = addZero(time) + timerValue.slice(2);
     } else {
-      setSeconds(e.target.value);
-      time = timerValue.slice(0, 3) + time;
+      setSeconds(time);
+
+      time = timerValue.slice(0, 3) + addZero(time);
     }
+
+    console.log(time);
     setTimerValue(time);
   };
 
